@@ -5,13 +5,19 @@ from werkzeug.urls import url_parse
 from werkzeug.utils import redirect
 import app
 from flask_login import current_user, login_user, logout_user
-
+from datetime import datetime
 
 from app import app, db
 from flask import render_template, request
 
-from app.forms import LoginForm, RegistrationForm
+from app.forms import EditProfileForm, LoginForm, RegistrationForm
 from app.models import User
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now()
+        db.session.commit()
 
 @app.route('/')
 @login_required
@@ -71,3 +77,38 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
         
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {
+            'title': 'Beautiful Day in portland',
+            'content': 'Portland, Oregon’s largest city, sits on the Columbia and Willamette rivers, in the shadow of snow-capped Mount Hood. It’s known for its parks, bridges and bicycle paths, as well as for its eco-friendliness and its microbreweries and coffeehouses',
+            'author': user
+        },
+        {
+            'title': 'Silcon valleny',
+            'content': 'Silicon Valley, in the southern San Francisco Bay Area of California, is home to many start-up and global technology companies. Apple, Facebook and Google are among the most prominent. Its also the site of technology-focused institutions centered around Palo Altos Stanford University.',
+            'author': user
+        }
+    ]
+    return render_template('user.html', title='Profile', posts=posts, user=user)
+
+
+@app.route('/edit_profile', methods=['get', 'post'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if request.method == 'get':
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+
+    elif form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash('Your profile has been updated successfully!')
+        return redirect(url_for('edit_profile'))
+    
+    return render_template('edit_profile.html', title='Edit Profile', form = form)
