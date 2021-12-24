@@ -1,0 +1,19 @@
+2021-12-23 10:45:25,697 INFO: blog startup [in /Users/kevinchemutai/Desktop/blog_app/app/__init__.py:45]
+2021-12-23 10:45:43,353 ERROR: Exception on /edit_profile [GET] [in /Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask/app.py:1457]
+Traceback (most recent call last):
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask/app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask/app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask/app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/kevinchemutai/Desktop/blog_app/app/routes.py", line 102, in edit_profile
+    form = EditProfileForm()
+  File "/Users/kevinchemutai/Desktop/blog_app/venv/lib/python3.8/site-packages/wtforms/form.py", line 208, in __call__
+    return type.__call__(cls, *args, **kwargs)
+TypeError: __init__() missing 1 required positional argument: 'original_username'
+2021-12-23 10:48:38,885 INFO: blog startup [in /Users/kevinchemutai/Desktop/blog_app/app/__init__.py:45]
